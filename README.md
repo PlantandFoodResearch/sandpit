@@ -14,3 +14,5 @@ Follow this [activity guide on forking](https://guides.github.com/activities/for
 # DOI your code for research
 
 Make your [code citable](https://guides.github.com/activities/citable-code/) with [Zenodo](https://zenodo.org) 
+
+<!-- Test rendering of html comment in github -->
