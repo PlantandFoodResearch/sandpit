@@ -6,7 +6,11 @@ I'd like to be able to collaborate on writing using branches and forks and combi
 
 ### Chapter 2
 
-Are you insane!
+There are lots of benefits to using GitHub including:
+ 
+* comments
+* branches
+* the user interface
 
 ### Chapter 3
 
