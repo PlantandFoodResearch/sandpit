@@ -1,4 +1,4 @@
-#!/usr/bin/env Rscript
+#!/bin/env Rscript
 #
 # 2013-09-16
 # works with R 2.15.2 and ggplot 0.9.3.1
