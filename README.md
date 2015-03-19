@@ -1,16 +1,11 @@
-sandpit
-=======
+# Badges
 
-A demonstration repository
+[![Stories in Ready](https://badge.waffle.io/PlantandFoodResearch/sandpit.png?label=ready&title=Ready)](https://waffle.io/PlantandFoodResearch/sandpit)
 
-# Try It
+# Purpose  
 
-Follow this [activity guide on forking](https://guides.github.com/activities/forking/), someone might even merge your [pull request](https://guides.github.com/activities/forking/#making-a-pull-request)
+A repository to demonstrate to others how to achieve their goals with GitHub.
 
-# Pick me, Pick me
+# TEST by cecilia
 
-[Be social](https://guides.github.com/activities/socialize/)
-
-# DOI your code for research
-
-Make your [code citable](https://guides.github.com/activities/citable-code/) with [Zenodo](https://zenodo.org) 
+Learning
