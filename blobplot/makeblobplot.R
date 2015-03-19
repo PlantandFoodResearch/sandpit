@@ -26,11 +26,20 @@ library(reshape2)
 subplotwidth  <-1000;
 subplotheight <- 1000;
 
-## Poor mans getopts
-args                  <- commandArgs(trailingOnly = TRUE)
-arg_input_file        <- args[1]
-arg_ignore_below_prop <- as.numeric(args[2])
-arg_taxlevel          <- args[3]
+## Defaults
+## blobplot.txt 0.01 taxlevel_order
+
+if(interactive()) {
+  arg_input_file        <- "blobplot.txt"
+  arg_ignore_below_prop <- 0.01
+  arg_taxlevel          <- "taxlevel_order"
+} else {
+  ## Poor mans getopts
+  args                  <- commandArgs(trailingOnly = TRUE)
+  arg_input_file        <- args[1]
+  arg_ignore_below_prop <- as.numeric(args[2])
+  arg_taxlevel          <- args[3]
+}
 
 orig <- read.delim(arg_input_file,header=TRUE,sep="\t")
 orig <- orig[orig$len>=200,]
@@ -64,18 +73,18 @@ png(outFile, (numcols * subplotwidth), (1 * subplotheight) + 300, units="px",res
 theme_set(theme_bw())
 # Paul Tol scheme is well documented at http://www.sron.nl/~pault/colourschemes.pdf - Thank you Paul! Added DDDDDD and 777777 to it
 paultol <- list(c("#DDDDDD") ,
-                c("#DDDDDD","#4477AA"), 
-                c("#DDDDDD","#4477AA","#CC6677"), 
-                c("#DDDDDD","#4477AA","#DDCC77","#CC6677"), 
-                c("#DDDDDD","#4477AA","#117733","#DDCC77","#CC6677"), 
-                c("#DDDDDD","#332288","#88CCEE","#117733","#DDCC77","#CC6677"), 
-                c("#DDDDDD","#332288","#88CCEE","#117733","#DDCC77","#CC6677","#AA4499"), 
-                c("#DDDDDD","#332288","#88CCEE","#44AA99","#117733","#DDCC77","#CC6677","#AA4499"), 
-                c("#DDDDDD","#332288","#88CCEE","#44AA99","#117733","#999933","#DDCC77","#CC6677","#AA4499"), 
-                c("#DDDDDD","#332288","#88CCEE","#44AA99","#117733","#999933","#DDCC77","#CC6677","#882255","#AA4499"), 
-                c("#DDDDDD","#332288","#88CCEE","#44AA99","#117733","#999933","#DDCC77","#661100","#CC6677","#882255","#AA4499"), 
-                c("#DDDDDD","#332288","#6699CC","#88CCEE","#44AA99","#117733","#999933","#DDCC77","#661100","#CC6677","#882255","#AA4499"), 
-                c("#DDDDDD","#332288","#6699CC","#88CCEE","#44AA99","#117733","#999933","#DDCC77","#661100","#CC6677","#AA4466","#882255","#AA4499"), 
+                c("#DDDDDD","#4477AA"),
+                c("#DDDDDD","#4477AA","#CC6677"),
+                c("#DDDDDD","#4477AA","#DDCC77","#CC6677"),
+                c("#DDDDDD","#4477AA","#117733","#DDCC77","#CC6677"),
+                c("#DDDDDD","#332288","#88CCEE","#117733","#DDCC77","#CC6677"),
+                c("#DDDDDD","#332288","#88CCEE","#117733","#DDCC77","#CC6677","#AA4499"),
+                c("#DDDDDD","#332288","#88CCEE","#44AA99","#117733","#DDCC77","#CC6677","#AA4499"),
+                c("#DDDDDD","#332288","#88CCEE","#44AA99","#117733","#999933","#DDCC77","#CC6677","#AA4499"),
+                c("#DDDDDD","#332288","#88CCEE","#44AA99","#117733","#999933","#DDCC77","#CC6677","#882255","#AA4499"),
+                c("#DDDDDD","#332288","#88CCEE","#44AA99","#117733","#999933","#DDCC77","#661100","#CC6677","#882255","#AA4499"),
+                c("#DDDDDD","#332288","#6699CC","#88CCEE","#44AA99","#117733","#999933","#DDCC77","#661100","#CC6677","#882255","#AA4499"),
+                c("#DDDDDD","#332288","#6699CC","#88CCEE","#44AA99","#117733","#999933","#DDCC77","#661100","#CC6677","#AA4466","#882255","#AA4499"),
                 c("#DDDDDD","#332288","#6699CC","#88CCEE","#44AA99","#117733","#999933","#DDCC77","#661100","#CC6677","#AA4466","#882255","#AA4499","#777777"))
 
 g<-ggplot() + scale_colour_manual(values=paultol[[length(levels(mfilt[,taxlevel]))]], name="Taxonomic\nClassification", limits=levels(mfilt[,taxlevel]) )
@@ -85,10 +94,10 @@ for (t in levels(mfilt[,taxlevel])) {
 }
 #y_axis_breaks = c(1,2,5,10,20,50,100,200,500,1000);
 g<- g +
-  facet_wrap(~read_set, ncol=numcols) + 
+  facet_wrap(~read_set, ncol=numcols) +
   scale_y_log10() + scale_x_continuous(limits=c(0, 1),breaks = seq(0,1,.1)) +
-  labs(x="GC content", y="Read coverage") + 
-  guides(colour = guide_legend(nrow=3, override.aes = list(alpha = 1,size=10))) + 
+  labs(x="GC content", y="Read coverage") +
+  guides(colour = guide_legend(nrow=3, override.aes = list(alpha = 1,size=10))) +
   theme (
     strip.text.x = element_text(colour = "black", size = 25, vjust = 0.5),
     axis.text.x  = element_text(colour = "black", size = 25, vjust = 1),
