@@ -1,0 +1,18 @@
+# .bashrc
+
+# Customise and Colour prompt for bash
+
+WHITE="\[\033[0m\]"
+RED="\[\033[31m\]"
+CYAN="\[\033[36m\]"
+GREEN="\[\033[32m\]"
+YELLOW="\[\033[33m\]"
+PURPLE="\[\033[35m\]"
+
+# Source the git-prompt script
+. ~/.git-prompt.sh
+
+# Export custom prompt with git branch
+
+export PS1="$PURPLE[\$(date +%H:%M)]$RED[$GREEN\u$CYAN@\h:$YELLOW\W$GREEN\$(__git_ps1)$RED] \$$WHITE "
+
