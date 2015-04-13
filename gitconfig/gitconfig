@@ -1,0 +1,17 @@
+[alias]
+        st = status
+        ci = commit
+        br = branch
+        co = checkout
+        df = diff
+        lg = log -p
+        dfn = diff --name-only
+[color]
+        ui = auto
+[user]
+	name = Firstname Lastname
+	email = firstname.lastname@server.com
+[credential "https://github.com"]
+	username = GitHubUsername
+[http]
+	postBuffer = 6M
