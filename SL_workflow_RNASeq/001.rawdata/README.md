@@ -3,6 +3,7 @@ Generating an example dataset
 
 Use wgsim to simulate some data.
 
+```
 Program: wgsim (short read simulator)
 Version: 0.3.0
 
@@ -19,11 +20,14 @@ Options: -e FLOAT      base error rate [0.020]
          -X FLOAT      probability an indel is extended [0.30]
          -S INT        seed for random generator [-1]
          -h            haplotype mode
+```
 
 Script:
 
-bsub -m genome-s J readgenerate -o wgsim.log -e wgsim.err 					#bsub part
-
-wgsim CHR25.1.68.5.fasta 01234_kiwifruit_150bp_Lane7.R1.fq 01234_kiwifruit_150bp_Lane7.R2.fq	#script
-
+```
+## submit to open lava scheduler  bsub
+bsub -m genome-s J readgenerate -o wgsim.log -e wgsim.err \
+## simulate using wgsim
+wgsim CHR25.1.68.5.fasta 01234_kiwifruit_150bp_Lane7.R1.fq 01234_kiwifruit_150bp_Lane7.R2.fq
+```
  
