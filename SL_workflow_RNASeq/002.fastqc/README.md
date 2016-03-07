@@ -7,7 +7,7 @@ Use fastqc to check the quality of the reads.
 Usage:
 
 ```
-fastqc [-o output -t threads inputfile
+fastqc -o output -t threads inputfile
 ```
 
 Script:
