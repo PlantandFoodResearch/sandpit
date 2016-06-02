@@ -1,0 +1,50 @@
+---
+title: "Base graphics"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Checking out base graphics
+
+```{r}
+## All available datasets...
+data()
+
+## Dimensions
+dim(Orange)
+
+## First 5 rows...
+head(Orange)
+```
+
+
+Plot Circumerfence vs Age.
+
+```{r}
+plot( Orange$age, Orange$circumference, main="Orange dataset")
+
+## Make new variable
+set.seed(42)
+Orange$width <- Orange$circumference + rnorm(nrow(Orange), 0, 10)
+
+#plot(Orange$circumference, Orange$width)
+points(Orange$age, Orange$width, col="red", pch=16)
+```
+
+
+lattice graphics
+
+```{r}
+library(lattice)
+
+xyplot(circumference ~ age, data=Orange)
+
+## Conditioning
+xyplot(circumference ~ age | Tree, data=Orange, between=list(x=0.3, y=0.3))
+
+## Change layout
+xyplot(circumference ~ age | Tree, data=Orange, layout=c(5,1), between=list(x=0.3, y=0.3), aspect="xy")
+```
