@@ -12,4 +12,4 @@ A repository to demonstrate to others how to achieve their goals with GitHub.
 
 # TEST by cecilia
 
-Learning
+Learning.
