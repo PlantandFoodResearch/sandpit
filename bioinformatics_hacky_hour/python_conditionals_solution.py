@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 #
-# Read the input file, count the number genese on each strand (data column 2)
+# Read the input file, count the number genes on each strand (data column 2)
 
 # assign the input file name to a variable
 inputFile = 'python_conditionals_data.csv'
 
-# Read input file data inot variable
+# Read input file data into variable
 inputData = open(inputFile)
 
-# Initiate counting variables
+# Initialize counting variables
 positive_strand_genes = 0
 negative_strand_genes = 0
 unknown_strand_genes = 0
