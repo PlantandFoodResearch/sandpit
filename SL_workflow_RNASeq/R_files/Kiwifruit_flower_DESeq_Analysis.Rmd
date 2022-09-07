@@ -1,0 +1,153 @@
+---
+title: "DESeq_analysis_kiwifruit_flowers"
+author: "Sarah Pilkington and Lara Brian"
+date: "2 March 2016"
+output: word_document
+---
+
+Raw files used for FastQC diagnostic, then clipped, trimmed and filtered using FASTQMCF and FQ2TRIMMED. The files were then quality checked again and mapped to reference using STAR. The reference used in this analysis was the Chromosome 25 from the PS1v68 assembly and the gff3 file used was Aug68at_unmasked. The reads were then counted from the .BAM output files using HTSeqCount. The count files were then used as the input file for this DESeq2 analysis to create one file with gene IDs in column A followed by the results from the count files in order.
+
+First the packages needed for the analysis must be loaded:
+``` {r}
+library("DESeq2")
+library("ggplot2")
+```
+
+Then set the working directory and where the results should be saved to. Check it has set correctly using _getwd()_:
+```{r}
+setwd("~/RNA-seq/R")
+getwd()
+```
+
+Then define the input file:
+```{r}
+RawData <- read.delim("kiwifruit_flower_counts_delim.csv",sep=",",header=TRUE)
+dim(RawData)
+head(RawData)
+cbind(colnames(RawData))
+```
+
+Define the COUNT data and set it as a matrix:
+```{r}
+DATA <- as.matrix(RawData[,c(2:4)])
+head(DATA)
+```
+
+To define the row names:
+```{r}
+DATA2 <- DATA
+rownames(DATA2) <- RawData[,1]
+head(DATA2)
+```
+
+Group samples into various subsets of interest so they can be made into a colData dataframe:
+```{r}
+individual <- as.factor(rep(seq(1:3)))
+```
+
+Make a colData Dataframe with the info:
+```{r}
+colData <- DataFrame(individual,row.names=seq(1:3))
+```
+
+Make a DeseqDataSet object (an S3 class object can be made if the row data table holds multiple values that you would like queried): 
+```{r}
+dds<-DESeqDataSetFromMatrix(countData = DATA2,colData = colData,design = ~ individual) 
+```
+
+#### Multifactor design
+
+Using dds with previous design:
+```{r}
+ddsMF <- DESeq(dds)
+
+resMF <- results(ddsMF)
+head(resMF)
+
+resultsNames(ddsMF)
+```
+
+mcols will bring up the meaning of the columns:
+```{r}
+mcols(resMF, use.names=TRUE)
+```
+
+To bring up a summary of the results:
+```{r}
+summary(resMF)
+```
+
+Plot the MA-plot to show log2 fold changes attributable to a given variable over the mean of normalised counts:
+```{r}
+plotMA(resMF, main="DESeq2", ylim=c(-2,2))
+```
+
+To add the Maximum Likelihood Estimate for the log2 fold change as a column in the results:
+```{r}
+resMLE <- results(ddsMF, addMLE=TRUE)
+head(resMLE, 4)
+```
+
+To plot the dispersion estimates:
+```{r}
+plotDispEsts(ddsMF)
+```
+
+To plot the counts for a single gene across the groups:
+```{r}
+plotCounts(ddsMF, gene=which.min(resMF$padj), intgroup="individual", cex.main=0.75)
+```
+
+To customise the counts plot:
+```{r}
+data <- plotCounts(ddsMF, gene=which.min(resMF$padj), intgroup=c("individual"), cex.main=0.75, returnData=TRUE)
+ggplot(data, aes(x=individual, y=count, color=individual)) +
+  theme_bw() +
+  scale_y_log10() + 
+  geom_point(position=position_jitter(width=.1,height=0)) +
+  ggtitle("Significant Gene 1") +
+  theme(plot.title=element_text(size=10, vjust=2), panel.grid.major=element_blank(), panel.grid.minor=element_blank())
+```
+
+
+#### PCA Analysis
+
+Make transformations to data for PCA analysis:
+```{r}
+rld <- rlog(ddsMF)
+vsd <- varianceStabilizingTransformation(ddsMF)
+```
+
+Take a quick look at a PCA plot of variance stabilised data:
+```{r}
+pdf(file="VarianceStabl_PCA2_n1500.pdf", onefile= TRUE, paper="a4")
+
+plotPCA(vsd, intgroup=c("individual"),ntop = 1500)
+
+dev.off()
+```
+
+Take a quick look at a PCA plot of log normalised data:
+```{r}
+plotPCA(rld, intgroup=c("individual"),ntop = 1500)
+```
+
+
+#### Heatmaps
+
+Call the libraries "RColorBrewer" and "gplots" and build the heatmaps:
+```{r}
+library("RColorBrewer")
+library("gplots")
+select <- order(rowMeans(counts(ddsMF, normalized=TRUE)),decreasing=TRUE)[1:10]
+hmcol <- colorRampPalette(brewer.pal(9, "Blues"))(100)
+heatmap.2(counts(ddsMF,normalized=TRUE)[select,], col = hmcol,
+          Rowv = FALSE, Colv = FALSE, scale="none",
+          dendrogram="none", trace="none", margin=c(10,6))
+heatmap.2(assay(rld)[select,], col = hmcol,
+          Rowv = FALSE, Colv = FALSE, scale="none",
+          dendrogram="none", trace="none", margin=c(10,6))
+heatmap.2(assay(vsd)[select,], col = hmcol,
+          Rowv = FALSE, Colv = FALSE, scale="none",
+          dendrogram="none", trace="none", margin=c(10,6))
+```
